@@ -1,0 +1,72 @@
+/*  Page wrapper */
+.food-page {
+  position: relative;
+  min-height: 100vh;
+}
+
+/*  Background image */
+.food-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/*  Main container */
+.food-display {
+  padding: 40px;
+  text-align: center;
+}
+
+/*  HEADING */
+.menu-heading {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 30px;
+
+  font-family: "Poppins", sans-serif;
+
+  background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+  background-clip: text;
+   -webkit-background-clip: text;  
+    -webkit-text-fill-color: transparent;   
+}
+
+/*  GRID */
+.food-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/*  CARD STYLE (BLUE THEME) */
+.food-item {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  padding: 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/*  HOVER EFFECT */
+.food-item:hover {
+  background: linear-gradient(135deg, #93c5fd, #60a5fa);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* DISH NAME */
+.food-item h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+/*  PRICE */
+.food-item p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1e40af;
+}
