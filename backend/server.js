@@ -9,7 +9,10 @@ const authRoutes = require("./routes/auth");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+ origin: "https://food-tracking-app-qyhd.onrender.com",
+ credentials: true
+}));
 app.use(express.json());
 
 // ================= MongoDB =================
