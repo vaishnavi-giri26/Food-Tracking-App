@@ -25,7 +25,7 @@ function Orders() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/orders/${id}/status`,
+        `https://food-tracking-backend.onrender.com/orders/${id}/status`,
         {
           method: "PUT",
           headers: {
