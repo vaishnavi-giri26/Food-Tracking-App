@@ -6,7 +6,7 @@ function Orders() {
   const fetchOrders = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/orders", {
+    const res = await fetch("https://food-tracking-backend.onrender.com/orders", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
