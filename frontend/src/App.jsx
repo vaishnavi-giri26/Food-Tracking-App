@@ -15,8 +15,19 @@ import MyOrders from "./components/MyOrders";
 function App() {
   const [cartItems, setCartItems] = useState([]);
 
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+useEffect(() => {
+  setToken(localStorage.getItem("token"));
+}, []);
+  
+  let user = null;
+  try{
+    user =
+      JSON.parse(localStorage.getItem("user"));
+  } catch {
+    user = null;
+  }
 
   // Add to cart
   const addToCart = (item) => {
