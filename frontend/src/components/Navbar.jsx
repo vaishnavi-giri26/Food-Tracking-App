@@ -1,15 +1,23 @@
-  import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar({ cartCount }) {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  let user = null;
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch {
+    user = null;
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
   };
+
+  const role = user?.role?.toLowerCase();
 
   return (
     <div className="navbar">
@@ -30,20 +38,27 @@ function Navbar({ cartCount }) {
           <>
             <span className="username">Hey, {user.name}</span>
 
+            {/* MENU */}
             <button onClick={() => navigate("/menu")}>Menu</button>
 
-            {/*  ADMIN */ }
-            {user.role === "admin" && (
+            {/* ADMIN */}
+            {role === "admin" && (
               <button onClick={() => navigate("/admin/orders")}>
                 Orders
               </button>
             )}
 
-            {/*  CUSTOMER */}
-            {user.role === "customer" && (
-              <button onClick={() => navigate("/my-orders")}>
-                My Orders
-              </button>
+            {/* CUSTOMER */}
+            {role === "customer" && (
+              <>
+                <button onClick={() => navigate("/cart")}>
+                  Cart ({cartCount || 0})
+                </button>
+
+                <button onClick={() => navigate("/my-orders")}>
+                  My Orders
+                </button>
+              </>
             )}
 
             <button className="logout" onClick={handleLogout}>

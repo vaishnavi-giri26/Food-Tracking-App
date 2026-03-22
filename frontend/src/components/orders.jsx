@@ -19,6 +19,35 @@ function Orders() {
     }
   };
 
+  // ✅ UPDATE STATUS FUNCTION
+  const updateStatus = async (id, status) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/orders/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        fetchOrders(); // 🔥 refresh UI
+      } else {
+        alert("Failed to update status");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -44,10 +73,16 @@ function Orders() {
 
           <div style={{ marginTop: "10px" }}>
             <b>Status:</b>{" "}
-            <select style={styles.dropdown}>
-              <option>Pending</option>
-              <option>Processing</option>
-              <option>Delivered</option>
+            <select
+              style={styles.dropdown}
+              value={order.status} // ✅ show current status
+              onChange={(e) =>
+                updateStatus(order._id, e.target.value)
+              }
+            >
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="delivered">Delivered</option>
             </select>
           </div>
         </div>
