@@ -19,7 +19,7 @@ function checkout({ cartItems, clearCart }) {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/orders", {
+      const response = await fetch("https://food-tracking-backend.onrender.com/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
