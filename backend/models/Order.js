@@ -3,17 +3,21 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
   orderId: {
     type: Number,
-    unique: true
-  }, 
-  
-   
+    unique: true,
+  },
+
+  userId: {                      // 🔥 ADD THIS
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
   items: [
     {
       id: Number,
       name: String,
       quantity: Number,
-      price: Number, 
+      price: Number,
     },
   ],
 
@@ -32,6 +36,5 @@ const orderSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
 
 module.exports = mongoose.model("Order", orderSchema);
