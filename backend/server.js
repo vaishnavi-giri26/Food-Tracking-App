@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const Order = require("./models/order");
 
 const authRoutes = require("./routes/auth");
 
@@ -92,6 +93,9 @@ app.put("/orders/:id/status", verifyToken, async (req, res) => {
     const { status } = req.body;
 
     const order = await Order.findById(req.params.id);
+   if (!order) {
+  return res.status(404).json({ message: "Order not found" });
+}
     order.status = status;
 
     await order.save();
