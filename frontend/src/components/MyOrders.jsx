@@ -9,7 +9,7 @@ function MyOrders() {
 
     try {
       const res = await fetch(
-        "https://food-tracking-backend.onrender.com/api/orders/my",
+        "https://food-tracking-backend.onrender.com/orders",
         {
           headers: {
             Authorization: `Bearer ${token}`,
