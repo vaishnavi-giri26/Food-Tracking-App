@@ -15,18 +15,11 @@ import MyOrders from "./components/MyOrders.jsx";
 function App() {
   const [cartItems, setCartItems] = useState([]);
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-  let user = null;
-  try {
-    user =
-      typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("user"))
-        : null;
-  } catch {
-    user = null;
-  }
+  // ✅ STATE BASED AUTH (FINAL FIX)
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
   const addToCart = (item) => {
     const existingItem = cartItems.find((i) => i.id === item.id);
@@ -72,6 +65,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
+        {/* ✅ CUSTOMER ROUTES */}
         <Route
           path="/menu"
           element={
@@ -113,10 +107,11 @@ function App() {
           }
         />
 
+        {/* ✅ ADMIN ROUTES */}
         <Route
           path="/admin/dashboard"
           element={
-            token && user?.role === "admin" ? (
+            user?.role === "admin" ? (
               <AdminDashboard />
             ) : (
               <Navigate to="/login" />
@@ -127,7 +122,7 @@ function App() {
         <Route
           path="/admin/orders"
           element={
-            token && user?.role === "admin" ? (
+            user?.role === "admin" ? (
               <Orders />
             ) : (
               <Navigate to="/login" />
@@ -135,7 +130,12 @@ function App() {
           }
         />
 
-        <Route path="/login" element={<Login />} />
+        {/* ✅ PASS STATE SETTERS */}
+        <Route
+          path="/login"
+          element={<Login setUser={setUser} setToken={setToken} />}
+        />
+
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
