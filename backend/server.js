@@ -4,9 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const Order = require("./models/Order");
+const Order = require("./models/Order.js");
 
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth.js");
 
 const app = express();
 
