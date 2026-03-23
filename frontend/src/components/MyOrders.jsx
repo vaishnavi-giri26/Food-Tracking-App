@@ -7,6 +7,11 @@ function MyOrders() {
   const fetchOrders = async () => {
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(
         "https://food-tracking-backend.onrender.com/orders",
@@ -20,7 +25,6 @@ function MyOrders() {
       const data = await res.json();
       console.log("Orders API response:", data); // 🔥 DEBUG
 
-      // ✅ HANDLE ALL CASES
       if (data?.orders) {
         setOrders(data.orders);
       } else if (Array.isArray(data)) {
@@ -30,20 +34,26 @@ function MyOrders() {
       }
     } catch (err) {
       console.error("Error fetching orders:", err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   return (
     <div style={styles.page}>
       <h2 style={styles.heading}>My Orders 📦</h2>
 
-      {/* 🔄 LOADING */}
       {loading ? (
         <p>Loading orders...</p>
       ) : orders.length === 0 ? (
@@ -65,7 +75,7 @@ function MyOrders() {
               ))}
             </div>
 
-            {/* STATUS */}
+            {/* 📦 STATUS */}
             <p style={{ marginTop: "10px" }}>
               <b>Status:</b>{" "}
               <span style={getStatusStyle(order.status)}>
@@ -80,13 +90,13 @@ function MyOrders() {
 }
 
 const getStatusStyle = (status) => {
-  if (status === "pending")
+  if (status?.toLowerCase() === "pending")
     return { color: "black", fontWeight: "600" };
 
-  if (status === "processing")
+  if (status?.toLowerCase() === "processing")
     return { color: "blue", fontWeight: "600" };
 
-  if (status === "Delivered" || status === "delivered")
+  if (status?.toLowerCase() === "delivered")
     return { color: "green", fontWeight: "600" };
 
   return { color: "gray" };
