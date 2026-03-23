@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/admin/login");
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -42,12 +42,14 @@ const AdminDashboard = () => {
   const markDelivered = async (id) => {
     const token = localStorage.getItem("token");
 
-    await fetch(`https://food-tracking-backend.onrender.com/orders/${id}/deliver`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+   await fetch(`https://food-tracking-backend.onrender.com/orders/${id}/status`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({ status: "delivered" }),
+});
 
     fetchOrders(); // refresh
   };
