@@ -47,7 +47,7 @@ function App() {
     setCartItems(
       cartItems
         .map((item) =>
-          item.id !== id
+          item.id === id
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
