@@ -34,7 +34,6 @@ function Login() {
         navigate("/menu");
       }
 
-      navigate(0); // 🔥 IMPORTANT (forces re-render)
     } else {
       alert(data.message);
     }
