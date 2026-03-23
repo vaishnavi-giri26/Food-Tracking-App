@@ -18,7 +18,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://food-tracking-backend.onrender.com/api/orders", {
+      const response = await fetch("https://food-tracking-backend.onrender.com/orders", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
   const markDelivered = async (id) => {
     const token = localStorage.getItem("token");
 
-   await fetch(`https://food-tracking-backend.onrender.com/api/orders/${id}/status`, {
+   await fetch(`https://food-tracking-backend.onrender.com/orders/${id}/status`, {
   method: "PUT",
   headers: {
     "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
   const deleteOrder = async (id) => {
     const token = localStorage.getItem("token");
 
-    await fetch(`https://food-tracking-backend.onrender.com/api/orders/${id}`, {
+    await fetch(`https://food-tracking-backend.onrender.com/orders/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
