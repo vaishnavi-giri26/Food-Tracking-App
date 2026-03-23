@@ -29,12 +29,11 @@ function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-       window.location.href = "/menu"; 
 
       if (data.user.role === "admin") {
         window.location.href = "/admin/orders";
       } else {
-        navigate("/menu");
+        window.location.href = "/menu";
       }
     } else {
       alert(data.message);
