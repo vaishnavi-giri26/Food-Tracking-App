@@ -9,7 +9,6 @@ function Login() {
   });
 
   const navigate = useNavigate();
-
   const isFilled = form.email && form.password;
 
   const handleLogin = async (e) => {
@@ -28,14 +27,14 @@ function Login() {
     if (data.token) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
-
 
       if (data.user.role === "admin") {
         navigate("/admin/orders");
       } else {
         navigate("/menu");
       }
+
+      navigate(0); // 🔥 IMPORTANT (forces re-render)
     } else {
       alert(data.message);
     }
@@ -88,14 +87,12 @@ function Login() {
 
 const styles = {
   container: { position: "relative", height: "100vh" },
-
   bg: {
     position: "absolute",
     width: "100%",
     height: "100%",
     objectFit: "cover",
   },
-
   card: {
     position: "absolute",
     top: "50%",
@@ -110,19 +107,16 @@ const styles = {
     color: "white",
     textAlign: "center",
   },
-
   title: {
     marginBottom: "20px",
     fontSize: "22px",
     fontWeight: "700",
   },
-
   form: {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
   },
-
   input: {
     padding: "12px",
     borderRadius: "8px",
@@ -131,7 +125,6 @@ const styles = {
     background: "rgba(255,255,255,0.2)",
     color: "white",
   },
-
   button: {
     padding: "12px",
     borderRadius: "8px",
@@ -140,4 +133,4 @@ const styles = {
   },
 };
 
-export default Login; 
+export default Login;
