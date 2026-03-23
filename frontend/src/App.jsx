@@ -15,7 +15,7 @@ import MyOrders from "./components/MyOrders.jsx";
 function App() {
   const [cartItems, setCartItems] = useState([]);
 
- const token = localstorage.getItem("token");
+ const token = localStorage.getItem("token");
 
   let user = null;
   try{
