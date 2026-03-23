@@ -29,6 +29,8 @@ function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+       window.location.href = "/menu"; 
+
       if (data.user.role === "admin") {
         navigate("/admin/orders");
       } else {
