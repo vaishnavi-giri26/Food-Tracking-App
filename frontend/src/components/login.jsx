@@ -33,10 +33,8 @@ function Login() {
 
       if (data.user.role === "admin") {
         navigate("/admin/orders");
-        navigate(0);
       } else {
         navigate("/menu");
-        navigate(0);
       }
     } else {
       alert(data.message);
