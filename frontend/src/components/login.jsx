@@ -32,9 +32,9 @@ function Login() {
 
 
       if (data.user.role === "admin") {
-        window.location.href = "/admin/orders";
+        navigate("/admin/orders");
       } else {
-        window.location.href = "/menu";
+        navigate("/menu");
       }
     } else {
       alert(data.message);
