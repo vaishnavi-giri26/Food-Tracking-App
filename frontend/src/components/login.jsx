@@ -28,7 +28,7 @@ function Login() {
     if (data.token) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      window.location.href = "/menu";
+      
 
 
       if (data.user.role === "admin") {
