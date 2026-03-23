@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/bg.avif";
 
-function Login() {
+function Login({ setUser, setToken }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -14,28 +14,41 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("https://food-tracking-backend.onrender.com/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch(
+        "https://food-tracking-backend.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      if (data.token) {
+        // ✅ store in localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (data.user.role === "admin") {
-        navigate("/admin/orders");
+        // ✅ update App state (THIS FIXES EVERYTHING)
+        setToken(data.token);
+        setUser(data.user);
+
+        // ✅ redirect based on role
+        if (data.user.role === "admin") {
+          navigate("/admin/orders");
+        } else {
+          navigate("/menu");
+        }
       } else {
-        navigate("/menu");
+        alert(data.message || "Login failed");
       }
-
-    } else {
-      alert(data.message);
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Something went wrong");
     }
   };
 
