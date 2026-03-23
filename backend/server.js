@@ -53,7 +53,8 @@ app.post("/orders", verifyToken, async (req, res) => {
       orderId: newOrderId,
       items,
       totalAmount,
-      userId: req.user.id,
+      userId: new,
+     moongose .Types.ObjectId(req.user.id),
     });
 
     await order.save();
