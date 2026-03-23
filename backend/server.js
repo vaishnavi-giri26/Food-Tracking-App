@@ -1,19 +1,23 @@
- require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const Order = require("./models/Order.js");
 
+const Order = require("./models/Order.js");
 const authRoutes = require("./routes/auth.js");
 
 const app = express();
 
-app.use(cors({
- origin: "https://food-tracking-app-qyhd.onrender.com",
- credentials: true
-}));
+// ================= CORS =================
+app.use(
+  cors({
+    origin: "https://food-tracking-app-qyhd.onrender.com",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // ================= MongoDB =================
@@ -22,8 +26,7 @@ mongoose
   .then(() => console.log("MongoDB Connected ✅"))
   .catch((err) => console.log(err));
 
-
-// ================= Middleware =================
+// ================= AUTH MIDDLEWARE =================
 function verifyToken(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -38,7 +41,7 @@ function verifyToken(req, res, next) {
   }
 }
 
-// ================= Auth =================
+// ================= AUTH ROUTES =================
 app.use("/api/auth", authRoutes);
 
 // ================= CREATE ORDER =================
@@ -53,14 +56,15 @@ app.post("/orders", verifyToken, async (req, res) => {
       orderId: newOrderId,
       items,
       totalAmount,
-      userId: new,
-     moongose .Types.ObjectId(req.user.id),
+      userId: new mongoose.Types.ObjectId(req.user.id), // ✅ FIXED
+      status: "Pending",
     });
 
     await order.save();
 
     res.json({ success: true, order });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error creating order" });
   }
 });
@@ -71,22 +75,19 @@ app.get("/orders", verifyToken, async (req, res) => {
     let orders;
 
     if (req.user.role === "admin") {
-      orders = await Order.find()
-        .populate("userId", "name email")
-        .sort({ createdAt: -1 });
+      orders = await Order.find().sort({ createdAt: -1 });
     } else {
-      orders = await Order.find({ userId: req.user.id })
-        .populate("userId", "name email")
-        .sort({ createdAt: -1 });
+      orders = await Order.find({
+        userId: new mongoose.Types.ObjectId(req.user.id), // ✅ FIXED
+      }).sort({ createdAt: -1 });
     }
 
     res.json({ success: true, orders });
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error fetching orders" });
   }
 });
-
-    
 
 // ================= UPDATE STATUS =================
 app.put("/orders/:id/status", verifyToken, async (req, res) => {
@@ -94,22 +95,30 @@ app.put("/orders/:id/status", verifyToken, async (req, res) => {
     const { status } = req.body;
 
     const order = await Order.findById(req.params.id);
-   if (!order) {
-  return res.status(404).json({ message: "Order not found" });
-}
-    order.status = status;
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
 
+    order.status = status;
     await order.save();
 
     res.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error updating status" });
   }
 });
-// ================= DELETE =================
+
+// ================= DELETE ORDER =================
 app.delete("/orders/:id", verifyToken, async (req, res) => {
-  await Order.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting order" });
+  }
 });
 
-app.listen(5000, () => console.log("Server running 🚀"));  
+// ================= SERVER =================
+app.listen(5000, () => console.log("Server running 🚀"));
