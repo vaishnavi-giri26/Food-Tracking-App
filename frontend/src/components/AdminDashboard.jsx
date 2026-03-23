@@ -5,7 +5,7 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
-  //  Protect route
+  // 🔐 Protect route
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -13,21 +13,29 @@ const AdminDashboard = () => {
     }
   }, [navigate]);
 
-  //  Fetch Orders
+  // 📦 Fetch Orders
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://food-tracking-backend.onrender.com/orders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://food-tracking-backend.onrender.com/orders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
+      console.log("Admin orders:", data); // 🔥 DEBUG
 
-      if (data.success) {
+      if (data?.orders) {
         setOrders(data.orders);
+      } else if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        setOrders([]);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -38,45 +46,51 @@ const AdminDashboard = () => {
     fetchOrders();
   }, []);
 
-  // Mark Delivered
+  // ✅ Mark Delivered
   const markDelivered = async (id) => {
     const token = localStorage.getItem("token");
 
-   await fetch(`https://food-tracking-backend.onrender.com/orders/${id}/status`, {
-  method: "PUT",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({ status: "delivered" }),
-});
+    await fetch(
+      `https://food-tracking-backend.onrender.com/orders/${id}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: "delivered" }),
+      }
+    );
 
-    fetchOrders(); // refresh
+    fetchOrders();
   };
 
-  //  Delete Order
+  // ❌ Delete Order
   const deleteOrder = async (id) => {
     const token = localStorage.getItem("token");
 
-    await fetch(`https://food-tracking-backend.onrender.com/orders/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await fetch(
+      `https://food-tracking-backend.onrender.com/orders/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    fetchOrders(); // refresh
+    fetchOrders();
   };
 
-  //  Stats
+  // 📊 Stats
   const totalOrders = orders.length;
 
   const deliveredOrders = orders.filter(
-    (order) => order.status === "Delivered"
+    (order) => order.status?.toLowerCase() === "delivered"
   ).length;
 
   const pendingOrders = orders.filter(
-    (order) => order.status !== "Delivered"
+    (order) => order.status?.toLowerCase() !== "delivered"
   ).length;
 
   const totalRevenue = orders.reduce(
@@ -88,83 +102,102 @@ const AdminDashboard = () => {
     <div style={{ padding: "20px", background: "#f5f5f5", minHeight: "100vh" }}>
       <h2>📊 Admin Dashboard</h2>
 
-      {/*  Stats */}
-      <div style={{ display: "flex", gap: "20px", marginBottom: "30px", flexWrap: "wrap" }}>
+      {/* 📊 Stats */}
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          marginBottom: "30px",
+          flexWrap: "wrap",
+        }}
+      >
         <Card title="Total Orders" value={totalOrders} color="#007bff" />
         <Card title="Delivered" value={deliveredOrders} color="#28a745" />
         <Card title="Pending" value={pendingOrders} color="#ffc107" />
         <Card title="Revenue" value={`₹${totalRevenue}`} color="#6f42c1" />
       </div>
 
-      {/*  Orders Table */}
+      {/* 📦 Orders Table */}
       <div style={{ background: "white", padding: "20px", borderRadius: "10px" }}>
         <h3>📦 Orders List</h3>
 
-        <table style={{ width: "100%", marginTop: "15px", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ background: "#ddd" }}>
-              <th style={th}>Order ID</th>
-              <th style={th}>Items</th>
-              <th style={th}>Amount</th>
-              <th style={th}>Status</th>
-              <th style={th}>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td style={td}>{order.orderId}</td>
-
-                <td style={td}>
-                  {order.items.map((item, index) => (
-                    <div key={index}>
-                      {item.name} x {item.quantity}
-                    </div>
-                  ))}
-                </td>
-
-                <td style={td}>₹{order.totalAmount}</td>
-
-                <td style={td}>
-                  <span
-                    style={{
-                      color:
-                        order.status === "Delivered" ? "green" : "orange",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-
-                <td style={td}>
-                  {order.status !== "Delivered" && (
-                    <button
-                      onClick={() => markDelivered(order._id)}
-                      style={deliverBtn}
-                    >
-                      Deliver
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => deleteOrder(order._id)}
-                    style={deleteBtn}
-                  >
-                    Delete
-                  </button>
-                </td>
+        {orders.length === 0 ? (
+          <p>No orders available</p>
+        ) : (
+          <table
+            style={{
+              width: "100%",
+              marginTop: "15px",
+              borderCollapse: "collapse",
+            }}
+          >
+            <thead>
+              <tr style={{ background: "#ddd" }}>
+                <th style={th}>Order ID</th>
+                <th style={th}>Items</th>
+                <th style={th}>Amount</th>
+                <th style={th}>Status</th>
+                <th style={th}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td style={td}>{order.orderId}</td>
+
+                  <td style={td}>
+                    {order.items?.map((item, index) => (
+                      <div key={index}>
+                        {item.name} x {item.quantity}
+                      </div>
+                    ))}
+                  </td>
+
+                  <td style={td}>₹{order.totalAmount}</td>
+
+                  <td style={td}>
+                    <span
+                      style={{
+                        color:
+                          order.status?.toLowerCase() === "delivered"
+                            ? "green"
+                            : "orange",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {order.status}
+                    </span>
+                  </td>
+
+                  <td style={td}>
+                    {order.status?.toLowerCase() !== "delivered" && (
+                      <button
+                        onClick={() => markDelivered(order._id)}
+                        style={deliverBtn}
+                      >
+                        Deliver
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => deleteOrder(order._id)}
+                      style={deleteBtn}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
 };
 
-//  Card
+// 📊 Card Component
 const Card = ({ title, value, color }) => (
   <div
     style={{
@@ -181,7 +214,7 @@ const Card = ({ title, value, color }) => (
   </div>
 );
 
-//  Styles
+// 🎨 Styles
 const th = { padding: "10px", border: "1px solid #ccc" };
 const td = { padding: "10px", border: "1px solid #ccc" };
 
