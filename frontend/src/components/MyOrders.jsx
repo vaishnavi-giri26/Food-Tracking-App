@@ -7,7 +7,7 @@ function MyOrders() {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("https://food-tracking-backend.onrender.com/orders", {
+      const res = await fetch("https://food-tracking-backend.onrender.com/api/orders/my", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
