@@ -54,7 +54,7 @@ const AdminDashboard = () => {
 
   //  Delete Order
   const deleteOrder = async (id) => {
-    const token = localStorage.getItem("adminToken");
+    const token = localStorage.getItem("token");
 
     await fetch(`https://food-tracking-backend.onrender.com/orders/${id}`, {
       method: "DELETE",
