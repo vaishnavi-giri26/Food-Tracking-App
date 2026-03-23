@@ -21,26 +21,6 @@ mongoose
   .then(() => console.log("MongoDB Connected ✅"))
   .catch((err) => console.log(err));
 
-// ================= Order Schema =================
-const orderSchema = new mongoose.Schema(
-  {
-    orderId: Number,
-    items: Array,
-    totalAmount: Number,
-    status: {
-  type: String,
-  enum: ["pending", "processing", "delivered"],
-  default: "pending",
-},
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  },
-  { timestamps: true }
-);
-
-const Order = mongoose.model("Order", orderSchema);
 
 // ================= Middleware =================
 function verifyToken(req, res, next) {
