@@ -32,7 +32,7 @@ function Login() {
        window.location.href = "/menu"; 
 
       if (data.user.role === "admin") {
-        navigate("/admin/orders");
+        window.location.href = "/admin/orders";
       } else {
         navigate("/menu");
       }
