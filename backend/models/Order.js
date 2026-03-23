@@ -6,10 +6,10 @@ const orderSchema = new mongoose.Schema({
     unique: true,
   },
 
-  userId: {                      // 🔥 ADD THIS
+
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
 
   items: [
