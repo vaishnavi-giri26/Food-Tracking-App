@@ -7,7 +7,7 @@ const AdminDashboard = () => {
 
   //  Protect route
   useEffect(() => {
-    const token = localStorage.getItem("adminToken");
+    const token = localStorage.getItem("token");
     if (!token) {
       navigate("/admin/login");
     }
@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   //  Fetch Orders
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem("adminToken");
+      const token = localStorage.getItem("token");
 
       const response = await fetch("http://localhost:5000/orders", {
         headers: {
