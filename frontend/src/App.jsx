@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import FoodDisplay from "./components/FoodDisplay";
-import Cart from "./components/Cart";
-import Checkout from "./components/checkout";
-import Orders from  "./components/orders"; 
-import AdminDashboard from "./components/AdminDashboard";
-import Register from "./components/registration";
-import Login from "./components/login";
-import Home from "./components/Home"; 
-import MyOrders from "./components/MyOrders";
+import Navbar from "./components/Navbar.jsx";
+import FoodDisplay from "./components/FoodDisplay.jsx";
+import Cart from "./components/Cart.jsx";
+import Checkout from "./components/checkout.jsx";
+import Orders from  "./components/orders.jsx"; 
+import AdminDashboard from "./components/AdminDashboard.jsx";
+import Register from "./components/registration.jsx";
+import Login from "./components/login.jsx";
+import Home from "./components/Home.jsx"; 
+import MyOrders from "./components/MyOrders.jsx";
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
